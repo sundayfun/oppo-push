@@ -14,14 +14,15 @@ func doPost(url string, form url.Values) ([]byte, error) {
 	var req *http.Request
 	var resp *http.Response
 	var err error
-	req, err = http.NewRequest("POST", url, strings.NewReader(form.Encode()))
+	client := &http.Client{}
+	tryTime := 0
+	fbody := form.Encode()
+tryAgain:
+	req, err = http.NewRequest("POST", url, strings.NewReader(fbody))
 	if err != nil {
 		panic(err)
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	client := &http.Client{}
-	tryTime := 0
-tryAgain:
 	resp, err = client.Do(req)
 	if err != nil {
 		tryTime++
